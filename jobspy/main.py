@@ -8,7 +8,7 @@ from jobspy import scrape_jobs
 def parse_args():
     parser = argparse.ArgumentParser(description='Scrape jobs from various sites')
     parser.add_argument('--site_name', default="indeed", 
-                        help='Comma-separated list of sites to scrape: indeed,linkedin,zip_recruiter,glassdoor,google,bayt,naukri')
+                        help='Comma-separated list of sites to scrape: indeed,linkedin,zip_recruiter,glassdoor,google,bayt,naukri,getro')
     parser.add_argument('--search_term', default="software engineer", 
                         help='Search term for jobs')
     parser.add_argument('--google_search_term', default="software engineer jobs near San Francisco, CA since yesterday", 
@@ -39,6 +39,10 @@ def parse_args():
                         help='Fetch LinkedIn job descriptions (slower)')
     parser.add_argument('--linkedin_company_ids', 
                         help='Comma-separated list of LinkedIn company IDs')
+    parser.add_argument('--getro_boards',
+                        help='Comma-separated list of Getro boards: arena,all_hands,democracy_fund (default: all)')
+    parser.add_argument('--getro_fetch_description', action='store_true',
+                        help='Fetch Getro job descriptions (slower)')
     parser.add_argument('--enforce_annual_salary', action='store_true',
                         help='Converts wages to annual salary')
     parser.add_argument('--proxies', 
@@ -62,6 +66,9 @@ proxies = args.proxies.split(',') if args.proxies else None
 # Parse LinkedIn company IDs if provided
 linkedin_company_ids = [int(id) for id in args.linkedin_company_ids.split(',')] if args.linkedin_company_ids else None
 
+# Parse Getro boards if provided
+getro_boards = [board.strip() for board in args.getro_boards.split(',')] if args.getro_boards else None
+
 jobs = scrape_jobs(
     site_name=site_names,
     search_term=args.search_term,
@@ -79,6 +86,8 @@ jobs = scrape_jobs(
     is_remote=args.is_remote,
     linkedin_fetch_description=args.linkedin_fetch_description,
     linkedin_company_ids=linkedin_company_ids,
+    getro_boards=getro_boards,
+    getro_fetch_description=args.getro_fetch_description,
     enforce_annual_salary=args.enforce_annual_salary,
     proxies=proxies,
     ca_cert=args.ca_cert,

@@ -1,1 +1,4 @@
-python-jobspy>=1.1.80
+# Temporarily pointed at Gregg's fork branch instead of PyPI, for the
+# Getro scraper (Arena/All Hands nonprofit-political boards) - not yet
+# published upstream. Switch back to `python-jobspy>=1.1.80` once merged.
+git+https://github.com/ggreeneva/JobSpy.git@feature/getro-scraper

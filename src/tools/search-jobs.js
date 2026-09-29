@@ -22,6 +22,8 @@ import changeCase from 'change-case-object';
  * @property {boolean} [isRemote] - Whether to search for remote jobs only
  * @property {boolean} [linkedinFetchDescription] - Whether to fetch LinkedIn job descriptions
  * @property {string} [linkedinCompanyIds] - Searches for linkedin jobs with specific company ids
+ * @property {string} [getroBoards] - Comma-separated Getro boards: arena, all_hands, democracy_fund
+ * @property {boolean} [getroFetchDescription] - Whether to fetch Getro job descriptions (slow)
  * @property {boolean} [enforceAnnualSalary] - Converts wages to annual salary
  * @property {string} [proxies] - Comma-separated list of proxies
  * @property {string} [caCert] - Path to CA Certificate file for proxies
@@ -264,6 +266,12 @@ function buildCommandArgs(params) {
   }
   if (params.linkedinCompanyIds) {
     args.push('--linkedin_company_ids', `"${params.linkedinCompanyIds}"`);
+  }
+  if (params.getroBoards) {
+    args.push('--getro_boards', `"${params.getroBoards}"`);
+  }
+  if (params.getroFetchDescription) {
+    args.push('--getro_fetch_description');
   }
   if (params.enforceAnnualSalary) {
     args.push('--enforce_annual_salary');

@@ -6,12 +6,12 @@ export const searchParams = {
       z
         .string()
         .describe(
-          'Comma-separated list of job sites to search. Options: indeed,linkedin,zip_recruiter,glassdoor,google,bayt,naukri'
+          'Comma-separated list of job sites to search. Options: indeed,linkedin,zip_recruiter,glassdoor,google,bayt,naukri,getro'
         ),
       z
         .array(z.string())
         .describe(
-          'Array of job sites to search. Options: indeed,linkedin,zip_recruiter,glassdoor,google,bayt,naukri'
+          'Array of job sites to search. Options: indeed,linkedin,zip_recruiter,glassdoor,google,bayt,naukri,getro'
         ),
     ])
     .transform((val) => {
@@ -36,12 +36,13 @@ export const searchParams = {
           'google',
           'bayt',
           'naukri',
+          'getro',
         ];
         return sites.every((site) => validSites.includes(site));
       },
       {
         message:
-          'Invalid site names. Allowed values: indeed, linkedin, zip_recruiter, glassdoor, google, bayt, naukri',
+          'Invalid site names. Allowed values: indeed, linkedin, zip_recruiter, glassdoor, google, bayt, naukri, getro',
       }
     )
     .default('indeed'),
@@ -145,6 +146,37 @@ export const searchParams = {
       return val;
     })
     .default(null),
+  getroBoards: z
+    .union([
+      z.string().describe('Comma-separated list of Getro boards'),
+      z.array(z.string()).describe('Array of Getro boards'),
+    ])
+    .nullable()
+    .describe(
+      'Getro boards to search (only applies to the getro site). Options: arena, all_hands, democracy_fund. Defaults to all boards.'
+    )
+    .transform((val) => {
+      if (Array.isArray(val)) {
+        return val.join(',');
+      }
+      return val;
+    })
+    .default(null),
+  getroFetchDescription: z
+    .any()
+    .describe(
+      'Whether to fetch full Getro job descriptions (slow: ~3-4 seconds per job, so keep resultsWanted small to stay within the timeout). Accepts any truthy value.'
+    )
+    .transform((val) => {
+      // Convert any truthy value to boolean
+      if (typeof val === 'string') {
+        // For strings, check for common "true" values
+        return ['true', 'yes', '1', 'on', 'y'].includes(val.toLowerCase());
+      }
+      // For other types, use Boolean conversion
+      return Boolean(val);
+    })
+    .default(false),
   enforceAnnualSalary: z
     .boolean()
     .describe('Converts wages to annual salary')
